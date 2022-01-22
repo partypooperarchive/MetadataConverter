@@ -45,3 +45,5 @@ _deps
 *.out
 *.app
 
+# Build directory
+/build/
