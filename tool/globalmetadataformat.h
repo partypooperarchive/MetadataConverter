@@ -1,6 +1,12 @@
 #ifndef GLOBALMETADATAFORMAT_H
 #define GLOBALMETADATAFORMAT_H
 
+#define IL2CPP_GENSHIN_270 2430 // 24.3 ?
+#define IL2CPP_GENSHIN_100 2400 // 24.0 ?
+
+//#define IL2CPP_FORMAT_VERSION IL2CPP_GENSHIN_100
+#define IL2CPP_FORMAT_VERSION IL2CPP_GENSHIN_270
+
 /* Non-Mihoyo Global Metadata format */
 struct Il2CppGlobalMetadataHeader {
     uint32_t sanity;
@@ -45,8 +51,10 @@ struct Il2CppGlobalMetadataHeader {
     uint32_t interfaceOffsetsCount;
     uint32_t typeDefinitionsOffset;
     uint32_t typeDefinitionsCount;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t rgctxEntriesOffset;
     uint32_t rgctxEntriesCount;
+    #endif
     uint32_t imagesOffset;
     uint32_t imagesCount;
     uint32_t assembliesOffset;
@@ -83,7 +91,9 @@ struct Il2CppPropertyDefinition {
     uint32_t get;
     uint32_t set;
     uint32_t attrs;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t customAttributeIndex;
+    #endif
     uint32_t token;
 };
 
@@ -92,13 +102,17 @@ struct Il2CppMethodDefinition {
     uint32_t declaringType;
     uint32_t returnType;
     uint32_t parameterStart;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t customAttributeIndex;
+    #endif
     uint32_t genericContainerIndex;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t methodIndex;
     uint32_t invokerIndex;
     uint32_t reversePInvokeWrapperIndex;
     uint32_t rgctxStartIndex;
     uint32_t rgctxCount;
+    #endif
     uint32_t token;
     uint16_t flags;
     uint16_t iflags;
@@ -109,21 +123,27 @@ struct Il2CppMethodDefinition {
 struct Il2CppFieldDefinition {
     uint32_t nameIndex;
     uint32_t typeIndex;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t customAttributeIndex;
+    #endif
     uint32_t token;
 };
 
 struct Il2CppTypeDefinition {
     uint32_t nameIndex;
     uint32_t namespaceIndex;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t customAttributeIndex;
+    #endif
     uint32_t byvalTypeIndex;
     uint32_t byrefTypeIndex;
     uint32_t declaringTypeIndex;
     uint32_t parentIndex;
     uint32_t elementTypeIndex;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t rgctxStartIndex;
     uint32_t rgctxCount;
+    #endif
     uint32_t genericContainerIndex;
     uint32_t flags;
     uint32_t fieldStart;
@@ -171,8 +191,13 @@ struct Il2CppGlobalMetadataHeaderMihoyo {
     uint32_t interfaceOffsetsCount; // 4C
     uint32_t typeDefinitionsOffset; // 50
     uint32_t typeDefinitionsCount; // 54
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t rgctxEntriesOffset; // 58
     uint32_t rgctxEntriesCount; // 5C
+    #else
+    uint32_t filler58; // TODO: Unknown!
+    uint32_t filler5C; // TODO: Unknown!
+    #endif
     uint32_t filler60;
     uint32_t filler64;
     uint32_t filler68;
@@ -243,7 +268,9 @@ struct Il2CppStringLiteralMihoyo {
 };
 
 struct Il2CppPropertyDefinitionMihoyo {
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t customAttributeIndex;
+    #endif
     uint32_t nameIndex;
     uint32_t filler08;
     uint32_t token;
@@ -260,13 +287,17 @@ struct Il2CppMethodDefinitionMihoyo {
     uint32_t nameIndex;
     uint32_t parameterStart;
     uint32_t genericContainerIndex;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t customAttributeIndex;
     uint32_t reversePInvokeWrapperIndex;
+    #endif
     uint32_t filler20;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t methodIndex;
     uint32_t invokerIndex;
     uint32_t rgctxCount;
     uint32_t rgctxStartIndex;
+    #endif
     uint16_t parameterCount;
     uint16_t flags;
     uint16_t slot;
@@ -275,7 +306,9 @@ struct Il2CppMethodDefinitionMihoyo {
 };
 
 struct Il2CppFieldDefinitionMihoyo {
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t customAttributeIndex;
+    #endif
     uint32_t typeIndex;
     uint32_t nameIndex;
     uint32_t token;
@@ -284,14 +317,18 @@ struct Il2CppFieldDefinitionMihoyo {
 struct Il2CppTypeDefinitionMihoyo {
     uint32_t nameIndex;
     uint32_t namespaceIndex;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t customAttributeIndex;
+    #endif
     uint32_t byvalTypeIndex;
     uint32_t byrefTypeIndex;
     uint32_t declaringTypeIndex;
     uint32_t parentIndex;
     uint32_t elementTypeIndex;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     uint32_t rgctxStartIndex;
     uint32_t rgctxCount;
+    #endif
     uint32_t genericContainerIndex;
     uint32_t flags;
     uint32_t fieldStart;
@@ -332,7 +369,9 @@ static inline To convert_Il2CppPropertyDefinition(From from) {
     to.get = from.get;
     to.set = from.set;
     to.attrs = from.attrs;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     to.customAttributeIndex = from.customAttributeIndex;
+    #endif
     to.token = from.token;
     return to;
 }
@@ -344,13 +383,17 @@ static inline To convert_Il2CppMethodDefinition(From from) {
     to.declaringType = from.declaringType;
     to.returnType = from.returnType;
     to.parameterStart = from.parameterStart;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     to.customAttributeIndex = from.customAttributeIndex;
+    #endif
     to.genericContainerIndex = from.genericContainerIndex;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     to.methodIndex = from.methodIndex;
     to.invokerIndex = from.invokerIndex;
     to.reversePInvokeWrapperIndex = from.reversePInvokeWrapperIndex;
     to.rgctxStartIndex = from.rgctxStartIndex;
     to.rgctxCount = from.rgctxCount;
+    #endif
     to.token = from.token;
     to.flags = from.flags;
     to.iflags = from.iflags;
@@ -364,7 +407,9 @@ static inline To convert_Il2CppFieldDefinition(From from) {
     To to {};
     to.nameIndex = from.nameIndex;
     to.typeIndex = from.typeIndex;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     to.customAttributeIndex = from.customAttributeIndex;
+    #endif
     to.token = from.token;
     return to;
 }
@@ -374,14 +419,18 @@ static inline To convert_Il2CppTypeDefinition(From from) {
     To to {};
     to.nameIndex = from.nameIndex;
     to.namespaceIndex = from.namespaceIndex;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     to.customAttributeIndex = from.customAttributeIndex;
+    #endif
     to.byvalTypeIndex = from.byvalTypeIndex;
     to.byrefTypeIndex = from.byrefTypeIndex;
     to.declaringTypeIndex = from.declaringTypeIndex;
     to.parentIndex = from.parentIndex;
     to.elementTypeIndex = from.elementTypeIndex;
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     to.rgctxStartIndex = from.rgctxStartIndex;
     to.rgctxCount = from.rgctxCount;
+    #endif
     to.genericContainerIndex = from.genericContainerIndex;
     to.flags = from.flags;
     to.fieldStart = from.fieldStart;

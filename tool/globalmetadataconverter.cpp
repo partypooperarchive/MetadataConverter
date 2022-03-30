@@ -79,7 +79,9 @@ std::vector<uint8_t> convert_to_unity_global_metadata(uint8_t const *data, size_
     cv.copy_section(srch.vtableMethodsOffset, srch.vtableMethodsCount, outh.vtableMethodsOffset, outh.vtableMethodsCount);
     cv.copy_section(srch.interfaceOffsetsOffset, srch.interfaceOffsetsCount, outh.interfaceOffsetsOffset, outh.interfaceOffsetsCount);
     cv.convert_section<Il2CppTypeDefinition, Il2CppTypeDefinitionMihoyo, convert_Il2CppTypeDefinition>(srch.typeDefinitionsOffset, srch.typeDefinitionsCount, outh.typeDefinitionsOffset, outh.typeDefinitionsCount);
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     cv.copy_section(srch.rgctxEntriesOffset, srch.rgctxEntriesCount, outh.rgctxEntriesOffset, outh.rgctxEntriesCount);
+    #endif
     cv.copy_section(srch.imagesOffset, srch.imagesCount, outh.imagesOffset, outh.imagesCount);
     cv.copy_section(srch.assembliesOffset, srch.assembliesCount, outh.assembliesOffset, outh.assembliesCount);
     cv.copy_section(srch.metadataUsageListsOffset, srch.metadataUsageListsCount, outh.metadataUsageListsOffset, outh.metadataUsageListsCount);
