@@ -1,7 +1,7 @@
 #ifndef GLOBALMETADATAFORMAT_H
 #define GLOBALMETADATAFORMAT_H
 
-#define IL2CPP_GENSHIN_270 2430 // 24.3 ?
+#define IL2CPP_GENSHIN_270 2440 // 24.4 ?
 #define IL2CPP_GENSHIN_100 2400 // 24.0 ?
 
 //#define IL2CPP_FORMAT_VERSION IL2CPP_GENSHIN_100
@@ -164,6 +164,18 @@ struct Il2CppTypeDefinition {
     uint16_t interface_offsets_count;
     uint32_t bitfield;
     uint32_t token;
+};
+
+struct Il2CppMetadataUsageList
+{
+    uint32_t start;
+    uint32_t count;
+};
+
+struct Il2CppMetadataUsagePair
+{
+    uint32_t destinationIndex;
+    uint32_t encodedSourceIndex;
 };
 
 /* Mihoyo Global Metadata format (with shuffled fields) */

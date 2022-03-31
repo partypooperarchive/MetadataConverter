@@ -49,6 +49,17 @@ struct converter {
         }
     }
 
+    #if IL2CPP_FORMAT_VERSION >= IL2CPP_GENSHIN_270
+    void forge_metadata_usage_lists_section(uint32_t pairs_count, uint32_t &to_offset, uint32_t &to_size) {
+        Il2CppMetadataUsageList list = { 0 };
+        list.start = 0;
+        list.count = pairs_count;
+        to_offset = writer.data.size();
+        to_size = 1 * sizeof(Il2CppMetadataUsageList);
+        writer.data.reserve(writer.data.size() + to_size);
+        writer.write(&list, sizeof(Il2CppMetadataUsageList));
+    }
+    #endif
 };
 
 
@@ -84,7 +95,11 @@ std::vector<uint8_t> convert_to_unity_global_metadata(uint8_t const *data, size_
     #endif
     cv.copy_section(srch.imagesOffset, srch.imagesCount, outh.imagesOffset, outh.imagesCount);
     cv.copy_section(srch.assembliesOffset, srch.assembliesCount, outh.assembliesOffset, outh.assembliesCount);
+    #if IL2CPP_FORMAT_VERSION < IL2CPP_GENSHIN_270
     cv.copy_section(srch.metadataUsageListsOffset, srch.metadataUsageListsCount, outh.metadataUsageListsOffset, outh.metadataUsageListsCount);
+    #else
+    cv.forge_metadata_usage_lists_section(srch.metadataUsagePairsCount / sizeof(Il2CppMetadataUsagePair), outh.metadataUsageListsOffset, outh.metadataUsageListsCount);
+    #endif
     cv.copy_section(srch.metadataUsagePairsOffset, srch.metadataUsagePairsCount, outh.metadataUsagePairsOffset, outh.metadataUsagePairsCount);
     cv.copy_section(srch.fieldRefsOffset, srch.fieldRefsCount, outh.fieldRefsOffset, outh.fieldRefsCount);
     cv.copy_section(srch.referencedAssembliesOffset, srch.referencedAssembliesCount, outh.referencedAssembliesOffset, outh.referencedAssembliesCount);
