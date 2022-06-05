@@ -7,6 +7,7 @@
 
 void print_help() {
     printf("decryptmeta   <input> <output>    - decrypts global-metadata.dat\n");
+    printf("encryptmeta   <input> <output>    - encrypts global-metadata.dat\n");
     printf("tounitymeta   <input> <output>    - converts the specified Mihoyo global-metadata.dat file to a standard Unity metadata file\n");
 }
 
@@ -20,6 +21,11 @@ int main(int argc, char* argv[]) {
         auto fdata = read_file(argv[2]);
         decrypt_global_metadata(fdata.data(), fdata.size());
         write_file(argv[3], fdata.data(), fdata.size() - 0x4000);
+    } else if (!strcmp(argv[1], "encryptmeta") && argc >= 4) {
+        auto fdata = read_file(argv[2]);
+        fdata.resize(fdata.size() + 0x4000, 0);
+        encrypt_global_metadata(fdata.data(), fdata.size());
+        write_file(argv[3], fdata.data(), fdata.size());
     } else if (!strcmp(argv[1], "tounitymeta") && argc >= 4) {
         auto fdata = read_file(argv[2]);
         decrypt_global_metadata(fdata.data(), fdata.size());

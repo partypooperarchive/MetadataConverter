@@ -18,7 +18,44 @@ struct m_literal {
     uint32_t offset, length;
 };
 
-void decrypt_global_metadata_header_string_fields(uint8_t *data, size_t len, uint8_t *literal_dec_key) {
+void generate_key_for_global_metadata_header_string(uint8_t* data, size_t len, uint8_t* literal_dec_key) {
+    if (len < sizeof(m_header_fields))
+        throw std::out_of_range("data not big enough for global metadata header");
+
+    uint32_t values[0x12] = {
+            *(uint32_t *) (data + 0x60),
+            *(uint32_t *) (data + 0x64),
+            *(uint32_t *) (data + 0x68),
+            *(uint32_t *) (data + 0x6c),
+            *(uint32_t *) (data + 0x140),
+            *(uint32_t *) (data + 0x144),
+            *(uint32_t *) (data + 0x148),
+            *(uint32_t *) (data + 0x14c),
+            *(uint32_t *) (data + 0x100),
+            *(uint32_t *) (data + 0x104),
+            *(uint32_t *) (data + 0x108),
+            *(uint32_t *) (data + 0x10c),
+            *(uint32_t *) (data + 0xf0),
+            *(uint32_t *) (data + 0xf4),
+            *(uint32_t *) (data + 8),
+            *(uint32_t *) (data + 0xc),
+            *(uint32_t *) (data + 0x10),
+            *(uint32_t *) (data + 0x14)
+    };
+
+    uint64_t seed = ((uint64_t) values[values[0] & 0xfu] << 0x20u) | values[(values[0x11] & 0xf) + 2];
+
+    std::mt19937_64 rand (seed);
+
+    for (int i = 0; i < 6; i++) // Skip
+        rand();
+
+    auto key64 = (uint64_t *) literal_dec_key;
+    for (int i = 0; i < 0xa00; i++)
+        key64[i] = rand();
+}
+
+void recrypt_global_metadata_header_string_fields(uint8_t *data, size_t len, uint8_t *literal_dec_key) {
     if (len < sizeof(m_header_fields))
         throw std::out_of_range("data not big enough for global metadata header");
 
@@ -60,7 +97,7 @@ void decrypt_global_metadata_header_string_fields(uint8_t *data, size_t len, uin
         key64[i] = rand();
 }
 
-void decrypt_global_metadata_header_string_literals(uint8_t *data, size_t len, uint8_t *literal_dec_key) {
+void recrypt_global_metadata_header_string_literals(uint8_t *data, size_t len, uint8_t *literal_dec_key) {
     if (len < sizeof(m_header_fields))
         throw std::out_of_range("data not big enough for global metadata header");
 
